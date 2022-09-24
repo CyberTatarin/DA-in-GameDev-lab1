@@ -45,28 +45,7 @@
 3. Создать объект Plane;
 4. Создать объект Cube;
 5. Создать объект Sphere;
-
-```py
-
-In [ ]:
-#Import the required modules, numpy for calculation, and Matplotlib for drawing
-import numpy as np
-import matplotlib.pyplot as plt
-#This code is for jupyter Notebook only
-%matplotlib inline
-
-# define data, and change list to array
-x = [3,21,22,34,54,34,55,67,89,99]
-x = np.array(x)
-y = [2,22,24,65,79,82,55,130,150,199]
-y = np.array(y)
-
-#Show the effect of a scatter plot
-plt.scatter(x,y)
-
-```
-
-- Определите связанные функции. Функция модели: определяет модель линейной регрессии wx+b. Функция потерь: функция потерь среднеквадратичной ошибки. Функция оптимизации: метод градиентного спуска для нахождения частных производных w и b.
+![alt-текст](https://github.com/adam-p/markdown-here/raw/master/src/common/images/perv "Текст заголовка логотипа 1")
 
 
 ## Задание 2
