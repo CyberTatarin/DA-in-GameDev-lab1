@@ -54,10 +54,15 @@
 7. Настроить Sphere Collider в роли триггера;
 
 
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/pp2.jpg)
+![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/pp3.png)
 
 
 8. Объект куб перекрасить в красный цвет;
+
+
+![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/pp2.jpg)
+
+
 9. Добавить кубу симуляцию физики, при это куб не должен проваливаться под Plane;
 10. Написать скрипт, который будет выводить в консоль сообщение о том, что объект Sphere столкнулся с объектом Cube;
 11. При столкновении Cube должен менять свой цвет на зелёный, а при завершении столкновения обратно на красный.
