@@ -45,8 +45,18 @@
 3. Создать объект Plane;
 4. Создать объект Cube;
 5. Создать объект Sphere;
+
+
+![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/pp.jpg)
+
+
 6. Установить компонент Sphere Collider для объекта Sphere;
 7. Настроить Sphere Collider в роли триггера;
+
+
+![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/pp2.jpg)
+
+
 8. Объект куб перекрасить в красный цвет;
 9. Добавить кубу симуляцию физики, при это куб не должен проваливаться под Plane;
 10. Написать скрипт, который будет выводить в консоль сообщение о том, что объект Sphere столкнулся с объектом Cube;
