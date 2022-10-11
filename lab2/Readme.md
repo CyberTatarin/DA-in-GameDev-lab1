@@ -107,50 +107,10 @@ public class EnemyDragon : MonoBehaviour
 
 
 ## Задание 2
-### Продемонстрируйте на сцене в Unity следующее:
-### -Что произойдёт с координатами объекта, если он перестанет быть дочерним?
-Координаты дочернего элемента(в данном случае куба) меняются вместе с родительским.
+### В проект, выполненный в предыдущем задании, добавить систему проверки того, что SDK подключен (доступен в режиме онлайн и отвечает на запросы);
 
 
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/child.gif)
 
-
-Куб перестал быть дочерним и стал самостоятельным. Теперь он не перенимает свойства и изменение координат сферы. 
-
-
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/pp4.jpg)
-
-
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/screenshots/rigid.gif)
-
-
-1. Красный куб; Режим Kinematic;
-2. Сфера; Режим Dynamic;
-3. Белый куб; Пример вращения.
-
-
-```c#
-public class SpinObject : MonoBehaviour
-{
-    public float Speed;
-    public float AngularSpeed;
-    protected Rigidbody r;
-    // Start is called before the first frame update
-    void Start()
-    {
-        r = GetComponent<Rigidbody>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Speed = r.velocity.magnitude;
-        AngularSpeed = r.angularVelocity.magnitude;
-
-        r.AddTorque(Vector3.forward);
-    }
-}
-```
 ## Задание 3
 ### Сложное)
 
