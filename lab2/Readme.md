@@ -41,36 +41,69 @@ Cоздание интерактивного приложения и изуче�
 ### По теме видео практических работ 1-5 повторить реализацию игры на Unity. Привести описание выполненных действий.
 
 1. Я создал новый проект из шаблона 3D – Core. Подключил в него ассет пак с драконами. Разместил на сцене префаб дракона.
-Установил вместо стандартной анимации анимацию парения в воздухе. Растегал яйцо и дракона.
+Установил вместо стандартной анимации анимацию парения в воздухе. Растегал яйцо и дракона;
 
 
 ![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab2/screenshots/pervaya.gif)
 
 
-2. Проверить, что настроена интеграция редактора Unity и Visual Studio Code (пункты 8-10 введения);
-3. Создать объект Plane;
-4. Создать объект Cube;
-5. Создать объект Sphere;
+2. Зарандомил движение дракона и создал префаб энергощита;
+3. Создал Plane и наложил текстуру лавы. Добавил случайную смену направления движения в скрипте. Добавил метод для сброса яиц;
+4. Написал скрипт для уничтожения яйца при Y=-30, а ещё главный скрипт для генерации и скалирования щитов;
+5. Заполнил 80% информации об игре на консоли разработчика Яндекс;
 
 
 
 ```c#
-public class CheckCollider : MonoBehaviour
-{
-    private void OnTriggerEnter(Collider other)
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EnemyDragon : MonoBehaviour
+{   
+    public GameObject dragonEggPrefab; 
+    public float speed = 1;
+    public float timeBetweenEggDrops = 1f;
+    public float leftRightDistance = 10f;
+    public float chanceDirection = 0.1f;
+    // Start is called before the first frame update
+    void Start()
     {
-        Debug.Log("Столкновение произошло с " + other.gameObject.name);
-        other.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+        Invoke("DropEgg", 2f);
+
     }
 
+    void DropEgg(){
+        Vector3 myVector = new Vector3(0.0f, 5.0f, 0.0f);
+        GameObject egg = Instantiate<GameObject>(dragonEggPrefab);
+        egg.transform.position = transform.position + myVector;
+        Invoke("DropEgg", timeBetweenEggDrops);
+    }
 
-    private void OnTriggerExit(Collider other)
+    // Update is called once per frame
+    void Update()
     {
-        Debug.Log("Столкновение завершено с " + other.gameObject.name);
-        other.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+        Vector3 pos = transform.position;
+        pos.x += speed * Time.deltaTime;
+        transform.position = pos;
+
+        if (pos.x < -leftRightDistance){
+            speed = Mathf.Abs(speed);
+        }
+        else if (pos.x > leftRightDistance){
+            speed = -Mathf.Abs(speed);
+            
+        }
+    }
+    private void FixedUpdate() {
+        if (Random.value < chanceDirection){
+            speed *= -1;
+        }
     }
 }
 ```
+
+
 ## Задание 2
 ### Продемонстрируйте на сцене в Unity следующее:
 ### -Что произойдёт с координатами объекта, если он перестанет быть дочерним?
