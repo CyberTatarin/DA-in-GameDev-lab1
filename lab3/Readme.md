@@ -1,5 +1,5 @@
 # РАЗРАБОТКА ИГРОВЫХ СЕРВИСОВ
-Отчет по лабораторной работе #2 выполнил(а):
+Отчет по лабораторной работе #3 выполнил(а):
 - Шайханов Марат Артурович
 - РИ300019
 Отметка о выполнении заданий (заполняется студентом):
@@ -7,7 +7,7 @@
 | Задание | Выполнение | Баллы |
 | ------ | ------ | ------ |
 | Задание 1 | * | 60 |
-| Задание 2 | # | 20 |
+| Задание 2 | * | 20 |
 | Задание 3 | # | 20 |
 
 знак "*" - задание выполнено; знак "#" - задание не выполнено;
@@ -35,71 +35,63 @@
 - ✨Magic ✨
 
 ## Цель работы
-Cоздание интерактивного приложения и изучение принципов интеграции в него игровых сервисов.
+Используя видео-материалы практических работ 1-5 повторить реализацию игровых механик: 
 
 ## Задание 1
-### По теме видео практических работ 1-5 повторить реализацию игры на Unity. Привести описание выполненных действий.
-
-1. Я создал новый проект из шаблона 3D – Core. Подключил в него ассет пак с драконами. Разместил на сцене префаб дракона.
-Установил вместо стандартной анимации анимацию парения в воздухе. Растегал яйцо и дракона;
+### Практические работы «Реализация механизма ловли объектов» и «Реализация графического интерфейса с добавлением счетчика очков».
 
 
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab2/screenshots/pervaya.gif)
+Сделал всё по видеолекциям.
 
 
-2. Зарандомил движение дракона и создал префаб энергощита;
-3. Создал Plane и наложил текстуру лавы. Добавил случайную смену направления движения в скрипте. Добавил метод для сброса яиц;
-4. Написал скрипт для уничтожения яйца при Y=-30, а ещё главный скрипт для генерации и скалирования щитов;
-5. Заполнил 80% информации об игре на консоли разработчика Яндекс;
+![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab3/screenshots/3laba1.gif)
 
 
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab2/screenshots/vtoraya.gif)
-
-
+### Основной скрипт DragonPicker.cs
 ```c#
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class EnemyDragon : MonoBehaviour
-{   
-    public GameObject dragonEggPrefab; 
-    public float speed = 1;
-    public float timeBetweenEggDrops = 1f;
-    public float leftRightDistance = 10f;
-    public float chanceDirection = 0.1f;
+public class DragonPicker : MonoBehaviour
+{
+    public GameObject energyShieldPrefab;
+    public int numEnergyShield = 3;
+    public float energyShieldBottomY = -6f;
+    public float energyShieldRadius = 1.5f;
+    public List<GameObject> shieldList;
     // Start is called before the first frame update
     void Start()
     {
-        Invoke("DropEgg", 2f);
+        shieldList = new List<GameObject>();
 
-    }
-
-    void DropEgg(){
-        Vector3 myVector = new Vector3(0.0f, 5.0f, 0.0f);
-        GameObject egg = Instantiate<GameObject>(dragonEggPrefab);
-        egg.transform.position = transform.position + myVector;
-        Invoke("DropEgg", timeBetweenEggDrops);
+        for (int i = 1; i <= numEnergyShield; i++){
+            GameObject tShieldGo = Instantiate<GameObject>(energyShieldPrefab);
+            tShieldGo.transform.position = new Vector3(0, energyShieldBottomY, 0);
+            tShieldGo.transform.localScale = new Vector3(1*i, 1*i, 1*i);
+            shieldList.Add(tShieldGo);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 pos = transform.position;
-        pos.x += speed * Time.deltaTime;
-        transform.position = pos;
-
-        if (pos.x < -leftRightDistance){
-            speed = Mathf.Abs(speed);
-        }
-        else if (pos.x > leftRightDistance){
-            speed = -Mathf.Abs(speed);
-            
-        }
+        
     }
-    private void FixedUpdate() {
-        if (Random.value < chanceDirection){
-            speed *= -1;
+
+    public void DragonEggDestroyed(){
+        GameObject[] tDragonEggArray = GameObject.FindGameObjectsWithTag("Dragon Egg");
+        foreach (GameObject tGO in tDragonEggArray){
+            Destroy(tGO);
+        }
+        int shieldIndex = shieldList.Count - 1;
+        GameObject tShieldGo = shieldList[shieldIndex];
+        shieldList.RemoveAt(shieldIndex);
+        Destroy(tShieldGo);
+
+        if (shieldList.Count == 0){
+            SceneManager.LoadScene("_0Scene");
         }
     }
 }
@@ -107,8 +99,12 @@ public class EnemyDragon : MonoBehaviour
 
 
 ## Задание 2
-### В проект, выполненный в предыдущем задании, добавить систему проверки того, что SDK подключен (доступен в режиме онлайн и отвечает на запросы);
+### Практические работы «Уменьшение жизни. Добавление текстур» и «Структурирование исходных файлов в папке».
 
+Жизни уменьшаются (Слои щита исчезают при потере яйца). Прибрался, удалил ненужные штуковины.
+
+
+![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab3/screenshots/3lab2.png)
 
 
 ## Задание 3
