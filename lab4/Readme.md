@@ -50,7 +50,7 @@
 Сделал всё по видеолекциям.
 
 
-![alt-текст]([https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab3/screenshots/3laba1.gif](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab4/screenshots/Vidosik.mp4))
+https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab3/screenshots/3laba1.gif](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab4/screenshots/Vidosik.mp4
 
 
 ### Основной скрипт DragonPicker.cs
