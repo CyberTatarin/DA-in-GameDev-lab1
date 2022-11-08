@@ -50,7 +50,11 @@
 Сделал всё по видеолекциям.
 
 
-https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab3/screenshots/3laba1.gif](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab4/screenshots/Vidosik.mp4
+
+
+https://user-images.githubusercontent.com/94743111/200647297-2fb0df89-d168-43c4-b841-b693790a1b3e.mp4
+
+
 
 
 ### Основной скрипт DragonPicker.cs
