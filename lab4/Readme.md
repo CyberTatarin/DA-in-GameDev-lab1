@@ -57,58 +57,8 @@ https://user-images.githubusercontent.com/94743111/200647297-2fb0df89-d168-43c4-
 
 
 
-### Основной скрипт DragonPicker.cs
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class DragonPicker : MonoBehaviour
-{
-    public GameObject energyShieldPrefab;
-    public int numEnergyShield = 3;
-    public float energyShieldBottomY = -6f;
-    public float energyShieldRadius = 1.5f;
-    public List<GameObject> shieldList;
-    // Start is called before the first frame update
-    void Start()
-    {
-        shieldList = new List<GameObject>();
-
-        for (int i = 1; i <= numEnergyShield; i++){
-            GameObject tShieldGo = Instantiate<GameObject>(energyShieldPrefab);
-            tShieldGo.transform.position = new Vector3(0, energyShieldBottomY, 0);
-            tShieldGo.transform.localScale = new Vector3(1*i, 1*i, 1*i);
-            shieldList.Add(tShieldGo);
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void DragonEggDestroyed(){
-        GameObject[] tDragonEggArray = GameObject.FindGameObjectsWithTag("Dragon Egg");
-        foreach (GameObject tGO in tDragonEggArray){
-            Destroy(tGO);
-        }
-        int shieldIndex = shieldList.Count - 1;
-        GameObject tShieldGo = shieldList[shieldIndex];
-        shieldList.RemoveAt(shieldIndex);
-        Destroy(tShieldGo);
-
-        if (shieldList.Count == 0){
-            SceneManager.LoadScene("_0Scene");
-        }
-    }
-}
-```
-
-
-### Cкрипт EnergyShield.cs
+В камерах обоих сцен присутствуют источники аудио.
+### Дополненный скрипт EnergyShield.cs
 ```c#
 using System.Collections;
 using System.Collections.Generic;
@@ -118,6 +68,7 @@ using TMPro;
 public class EnergyShield : MonoBehaviour
 {
     public TextMeshProUGUI scoreGT;
+    public AudioSource audioSource;
 
     void Start() {
         GameObject scoreGO = GameObject.Find("Score");
@@ -144,18 +95,120 @@ public class EnergyShield : MonoBehaviour
         int score = int.Parse(scoreGT.text);
         score += 1;
         scoreGT.text = score.ToString();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
     }
 }
 ```
 
 
+### Cкрипт DragonEgg.cs
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DragonEgg : MonoBehaviour
+{   
+    public static float bottomY = -30f;
+    public AudioSource audioSource;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        ParticleSystem ps = GetComponent<ParticleSystem>();
+        var em = ps.emission;
+        em.enabled = true;
+
+        Renderer rend;
+        rend = GetComponent<Renderer>();
+        rend.enabled = false;
+
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        if (transform.position.y < bottomY){
+            Destroy(this.gameObject);
+            DragonPicker apScript = Camera.main.GetComponent<DragonPicker>();
+            apScript.DragonEggDestroyed();
+        }
+    }
+}
+```
+
+
+### Cкрипт MainMenu.cs
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class MainMenu : MonoBehaviour
+{
+    // Start is called before the first frame update
+    public void PlayGame(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void QuitGame(){
+        Application.Quit();
+    }
+}
+
+```
+
+
+### Cкрипт Pause.cs
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class Pause : MonoBehaviour
+{
+    private bool paused = false;
+    public GameObject panel;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space)){
+            if(!paused){
+                Time.timeScale = 0;
+                paused = true;
+                panel.SetActive(true);
+            }
+            else{
+                Time.timeScale = 1;
+                paused = false;
+                panel.SetActive(false);
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        }
+    }
+}
+
+```
+
+
 ## Задание 2
-### Практические работы «Уменьшение жизни. Добавление текстур» и «Структурирование исходных файлов в папке».
-
-Жизни уменьшаются (Слои щита исчезают при потере яйца). Прибрался, удалил ненужные штуковины.
+### Привести описание того, как происходит сборка проекта проекта под другие платформы. Какие могут быть особенности? 
 
 
-![alt-текст](https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab3/screenshots/3lab2.png)
+Сборку можно осуществлять под разные платформы: Windows, Mac, Linux, PlayStation, Android, даже на удалённый сервак. Для изменения платформы следуем 
+"File -> Build Settings -> Platform" и выбираем желаемую. Иногда требуется ковыряться в настройках для фикса ошибок(у меня например вылезла ошибка рендринга
+Color Space* ). Следует разделять систему обработки ввода, так как у разных платформ разные способы ввода. 
 
 
 ## Задание 3
