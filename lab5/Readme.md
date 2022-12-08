@@ -198,7 +198,20 @@ YandexGame.NewLeaderboardScores("BestPlayerScore", int.Parse(scoreGT.text));
 
 ---
 
-Достижения
+Достижения.
+Код из метода UserSave:
+```c#
+    public void UserSave(int currentScore, int currentBestScore, string[] currenAchiv)
+    {
+        YandexGame.savesData.score = currentScore;
+        if (currentScore > currentBestScore)
+        {
+             YandexGame.savesData.bestScore = currentScore;   
+        }
+        YandexGame.savesData.achiveMent = currenAchiv;
+        YandexGame.SaveProgress();
+    }
+```
 
 https://user-images.githubusercontent.com/94743111/206452890-49f00ed7-c75e-4d2d-8145-9d88079ee489.mp4
 
@@ -207,10 +220,15 @@ https://user-images.githubusercontent.com/94743111/206452890-49f00ed7-c75e-4d2d-
 ## Задание 2
 ### Описать не менее трех дополнительных функций Яндекс SDK, которые могут быть интегрированы в игру. 
 
+Яндекс SDK позволяет:
+1. Менять язык внутри игры.
+![lng](https://user-images.githubusercontent.com/94743111/206456047-2dbf2232-bbaa-47a3-a98a-5eb39e8e3256.png)
+2. Совершать внутриигровые покупки.
+![pa](https://user-images.githubusercontent.com/94743111/206456340-f0b71d0f-9e36-49bb-807a-3b1b1a81f94c.png)
 
-Сборку можно осуществлять под разные платформы: Windows, Mac, Linux, PlayStation, Android, даже на удалённый сервак. Для изменения платформы следуем 
-"File -> Build Settings -> Platform" и выбираем желаемую. Иногда требуется ковыряться в настройках для фикса ошибок(у меня например вылезла ошибка рендринга
-Color Space* ). Следует разделять систему обработки ввода, так как у разных платформ разные способы ввода. 
+3.Менять настройки графики.
+![g](https://user-images.githubusercontent.com/94743111/206456304-8a162e27-eef2-4f4c-8390-1b4857754990.png)
+
 
 
 ## Задание 3
