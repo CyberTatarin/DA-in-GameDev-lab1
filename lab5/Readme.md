@@ -1,5 +1,5 @@
 # РАЗРАБОТКА ИГРОВЫХ СЕРВИСОВ
-Отчет по лабораторной работе #4 выполнил(а):
+Отчет по лабораторной работе #5 выполнил(а):
 - Шайханов Марат Артурович
 - РИ300019
 Отметка о выполнении заданий (заполняется студентом):
@@ -35,171 +35,50 @@
 - ✨Magic ✨
 
 ## Цель работы
-Используя видео-материалы практических работ 1-5 повторить реализацию игровых механик: 
+Создание интерактивного приложения с рейтинговой системой пользователя и интеграция игровых сервисов в готовое приложение.
 
 ## Задание 1
 ### Используя видео-материалы практических работ 1-5 повторить реализацию приведенного ниже функционала:
-- 1 Практическая работа «Создание анимации объектов на сцене».
-- 2 Практическая работа «Создание стартовой сцены и переключение между ними».
-- 3 Практическая работа «Доработка меню и функционала с остановкой игры».
-- 4 Практическая работа «Добавление звукового сопровождения в игре».
-- 5 Практическая работа «Добавление персонажа и сборка сцены для публикации на web-ресурсе».
+- 1 Практическая работа «Интеграции авторизации с помощью Яндекс SDK».
+- 2 Практическая работа «Сохранение данных пользователя на платформе Яндекс Игры».
+- 3 Практическая работа «Сбор данных об игроке и вывод их в интерфейсе».
+- 4 Практическая работа «Интеграция таблицы лидеров».
+- 5  Практическая работа «Интеграция системы достижений в проект».
 
+Сначала пишем скрипт для проверки данных YandexSDK. 
+OnEnable, OnDisable для проверки и CheckSDK для проверки авторизации
 
-
-Сделал всё по видеолекциям.
-
-
-
-
-https://user-images.githubusercontent.com/94743111/200647297-2fb0df89-d168-43c4-b841-b693790a1b3e.mp4
-
-
-
-
-В камерах обоих сцен присутствуют источники аудио.
-### Дополненный скрипт EnergyShield.cs
 ```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-
-public class EnergyShield : MonoBehaviour
+using YG;
+public class CheckConnectYG : MonoBehaviour
 {
-    public TextMeshProUGUI scoreGT;
-    public AudioSource audioSource;
-
-    void Start() {
-        GameObject scoreGO = GameObject.Find("Score");
-        scoreGT = scoreGO.GetComponent<TextMeshProUGUI>();
-        scoreGT.text = "0";
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 mousePos2D = Input.mousePosition;
-        mousePos2D.z = -Camera.main.transform.position.z;
-        Vector3 mousePos3D = Camera.main.ScreenToWorldPoint(mousePos2D);
-        Vector3 pos = this.transform.position;
-        pos.x = mousePos3D.x;
-        this.transform.position = pos;
-    }
-
-    private void OnCollisionEnter(Collision coll) {
-        GameObject Collided = coll.gameObject;
-        if (Collided.tag == "Dragon Egg"){
-            Destroy(Collided);
-        }
-        int score = int.Parse(scoreGT.text);
-        score += 1;
-        scoreGT.text = score.ToString();
-        audioSource = GetComponent<AudioSource>();
-        audioSource.Play();
-    }
-}
-```
-
-
-### Cкрипт DragonEgg.cs
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class DragonEgg : MonoBehaviour
-{   
-    public static float bottomY = -30f;
-    public AudioSource audioSource;
-
-    // Start is called before the first frame update
+    
+    private void OnEnable() => YandexGame.GetDataEvent += CheckSDK;
+    private void OnDisable() => YandexGame.GetDataEvent -= CheckSDK;
+        
+    
     void Start()
     {
-        
+        if (YandexGame.SDKEnabled == true) {
+            CheckSDK();
+        }
     }
 
-    private void OnTriggerEnter(Collider other) {
-        ParticleSystem ps = GetComponent<ParticleSystem>();
-        var em = ps.emission;
-        em.enabled = true;
-
-        Renderer rend;
-        rend = GetComponent<Renderer>();
-        rend.enabled = false;
-
-        audioSource = GetComponent<AudioSource>();
-        audioSource.Play();
-    }
-    // Update is called once per frame
-    void Update()
+   public void CheckSDK()
+   {
+    if (YandexGame.auth == true)
     {
-        if (transform.position.y < bottomY){
-            Destroy(this.gameObject);
-            DragonPicker apScript = Camera.main.GetComponent<DragonPicker>();
-            apScript.DragonEggDestroyed();
-        }
+        Debug.Log("User is authorized");
     }
-}
-```
-
-
-### Cкрипт MainMenu.cs
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class MainMenu : MonoBehaviour
-{
-    // Start is called before the first frame update
-    public void PlayGame(){
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-
-    public void QuitGame(){
-        Application.Quit();
-    }
-}
-
-```
-
-
-### Cкрипт Pause.cs
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class Pause : MonoBehaviour
-{
-    private bool paused = false;
-    public GameObject panel;
-
-    void Update()
+    else 
     {
-        if (Input.GetKeyDown(KeyCode.Space)){
-            if(!paused){
-                Time.timeScale = 0;
-                paused = true;
-                panel.SetActive(true);
-            }
-            else{
-                Time.timeScale = 1;
-                paused = false;
-                panel.SetActive(false);
-            }
-        }
-
-        if(Input.GetKeyDown(KeyCode.Escape)){
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-        }
+        Debug.Log("User is not authorized");
+        YandexGame.AuthDialog();
     }
+   }
 }
-
 ```
+
 
 
 ## Задание 2
