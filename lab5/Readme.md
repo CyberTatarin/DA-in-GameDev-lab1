@@ -81,8 +81,14 @@ public class CheckConnectYG : MonoBehaviour
 
 Создаём пустой объект на сцене и прикрепляем к нему наш скрипт. Собираем билд и идём тестировать в браузер. Не забываем поставить флажок авторизации и лидербордов.
 Консоль выдаёт такой ответ.
+
 <img src="https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab5/screenshots/%D1%8412.jpg">
 
+Если выйти из аккаунта, то нам поступит предложение авторизации.
+
+<img src="https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab5/screenshots/auth.png">
+
+---
 
 ## Задание 2
 ### Привести описание того, как происходит сборка проекта проекта под другие платформы. Какие могут быть особенности? 
