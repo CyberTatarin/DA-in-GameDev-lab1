@@ -81,7 +81,7 @@ public class CheckConnectYG : MonoBehaviour
 
 Создаём пустой объект на сцене и прикрепляем к нему наш скрипт. Собираем билд и идём тестировать в браузер. Не забываем поставить флажок авторизации и лидербордов.
 Консоль выдаёт такой ответ.
-<img src="https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab5/screenshots/%D1%8412.jpg" width="600" height="600" />
+<img src="https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab5/screenshots/%D1%8412.jpg">
 
 
 ## Задание 2
