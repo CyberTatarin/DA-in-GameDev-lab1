@@ -32,145 +32,46 @@ Cоздание интерактивного приложения с рейти�
 4. Практическая работа «Создание внутриигрового магазина»
 5. Практическая работа «Система антиблокировки рекламы»
 
-Сначала пишем скрипт для проверки данных YandexSDK. 
-OnEnable, OnDisable для проверки и CheckSDK для проверки авторизации
+### Интеграция баннерной рекламы
 
+Заполнил страницу приложения до 86%, но мне до сих пор не прислали письмо 
+с подтверждением для открытия рекламных блоков в яндекс консоли(.
+![image](https://user-images.githubusercontent.com/94743111/208495628-5637c00e-102d-4db1-b1be-66dd6bbe4aaa.png)
+
+
+###Сюда я добавляю id рекламного блока YG.
+![image](https://user-images.githubusercontent.com/94743111/208494650-ab1c554f-40f3-4fca-b3cd-526329fbc37e.png)
+
+Затем добавляю код показа рекламы после проигрыша и при запуске игры.
 ```c#
-using YG;
-public class CheckConnectYG : MonoBehaviour
-{
-    
-    private void OnEnable() => YandexGame.GetDataEvent += CheckSDK;
-    private void OnDisable() => YandexGame.GetDataEvent -= CheckSDK;
-        
-    
-    void Start()
-    {
-        if (YandexGame.SDKEnabled == true) {
-            CheckSDK();
-        }
-    }
-
-   public void CheckSDK()
-   {
-    if (YandexGame.auth == true)
-    {
-        Debug.Log("User is authorized");
-    }
-    else 
-    {
-        Debug.Log("User is not authorized");
-        YandexGame.AuthDialog();
-    }
-   }
-}
+YandexGame.RewVideoShow(0);
 ```
-
-Создаём пустой объект на сцене и прикрепляем к нему наш скрипт. Собираем билд и идём тестировать в браузер. Не забываем поставить флажок авторизации и лидербордов.
-Консоль выдаёт такой ответ.
-
-<img src="https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab5/screenshots/%D1%8412.jpg">
-
-Если выйти из аккаунта, то нам поступит предложение авторизации.
-
-<img src="https://github.com/CyberTatarin/DA-in-GameDev-lab1/blob/main/lab5/screenshots/auth.png">
-
+Ставлю паузу при показе рекламы на скрипте "ViewingAdsYG".
 ---
-
-Теперь напишим скрипт для сохранения пользовательских данных.
-Ниже обновленный скрипт DragonPicker.cs
-
+Добавляю на сцену новый объект со скриптом:
 ```c#
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using YG;
-using TMPro;
 
-public class DragonPicker : MonoBehaviour
+public class AdRewardManager : MonoBehaviour
 {
-    private void OnEnable() => YandexGame.GetDataEvent += GetLoadSave;
-    private void OnDisable() => YandexGame.GetDataEvent -= GetLoadSave;
+    public void OpenAd() => YandexGame.RewVideoShow(0);
 
-    public GameObject energyShieldPrefab;
-    public int numEnergyShield = 3;
-    public float energyShieldBottomY = -6f;
-    public float energyShieldRadius = 1.5f;
-    public TextMeshProUGUI scoreGT;
-    private TextMeshProUGUI playerName;
-    public List<GameObject> shieldList;
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (YandexGame.SDKEnabled == true)
-        {
-            GetLoadSave();
-        }
-        shieldList = new List<GameObject>();
-        
+    private void OnEnable() => YandexGame.CloseVideoEvent += OnReward;
 
-        for (int i = 1; i <= numEnergyShield; i++){
-            GameObject tShieldGo = Instantiate<GameObject>(energyShieldPrefab);
-            tShieldGo.transform.position = new Vector3(0, energyShieldBottomY, 0);
-            tShieldGo.transform.localScale = new Vector3(1*i, 1*i, 1*i);
-            shieldList.Add(tShieldGo);
-        }
-    }
+    private void OnDisable() => YandexGame.CloseVideoEvent -= OnReward;
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public void DragonEggDestroyed(){
-        GameObject[] tDragonEggArray = GameObject.FindGameObjectsWithTag("Dragon Egg");
-        foreach (GameObject tGO in tDragonEggArray){
-            Destroy(tGO);
-        }
-        int shieldIndex = shieldList.Count - 1;
-        GameObject tShieldGo = shieldList[shieldIndex];
-        shieldList.RemoveAt(shieldIndex);
-        Destroy(tShieldGo);
-
-        if (shieldList.Count == 0){
-            GameObject scoreGO = GameObject.Find("Score");
-            scoreGT = scoreGO.GetComponent<TextMeshProUGUI>();
-            string[] achivList;
-            achivList = YandexGame.savesData.achiveMent;
-            achivList[0] = "Береги щиты!";
-            UserSave(int.Parse(scoreGT.text),YandexGame.savesData.bestScore, achivList);
-            YandexGame.NewLeaderboardScores("TOPPlayerScore", int.Parse(scoreGT.text));
-            SceneManager.LoadScene("_0Scene");
-            GetLoadSave();
-        }
-    }
-    public void GetLoadSave()
-    {
-        Debug.Log(YandexGame.savesData.score);
-        GameObject playerNamePrefabGUI = GameObject.Find("PlayerName");
-        playerName = playerNamePrefabGUI.GetComponent<TextMeshProUGUI>();
-        playerName.text = YandexGame.playerName;
-    }
-
-    public void UserSave(int currentScore, int currentBestScore, string[] currenAchiv)
-    {
-        YandexGame.savesData.score = currentScore;
-        if (currentScore > currentBestScore)
-        {
-             YandexGame.savesData.bestScore = currentScore;   
-        }
-        YandexGame.savesData.achiveMent = currenAchiv;
-        YandexGame.SaveProgress();
-    }
+    private void OnReward(int id) => Debug.Log("Player rewarded!");
 }
-
 ```
+---
 
-При выгрузке билда не забываем про флажок облачные сохранения.
+Добавляю в главное меню кнопку с наградами:
+![image](https://user-images.githubusercontent.com/94743111/208496212-947815ca-0feb-491b-8d36-a471a08970ac.png)
 
 ---
+Ставлю флажок проверки на адблок.
+![image](https://user-images.githubusercontent.com/94743111/208497252-210a3dae-ba78-4bb6-a504-d60dcff7526a.png)
 
 Для лидербордов нам нужна такая строчка кода.
 
@@ -205,27 +106,19 @@ https://user-images.githubusercontent.com/94743111/206452890-49f00ed7-c75e-4d2d-
 ---
 
 ## Задание 2
-### Описать не менее трех дополнительных функций Яндекс SDK, которые могут быть интегрированы в игру. 
-
-Яндекс SDK позволяет:
-1. Менять язык внутри игры.
-![lng](https://user-images.githubusercontent.com/94743111/206456047-2dbf2232-bbaa-47a3-a98a-5eb39e8e3256.png)
-2. Совершать внутриигровые покупки.
-![pa](https://user-images.githubusercontent.com/94743111/206456340-f0b71d0f-9e36-49bb-807a-3b1b1a81f94c.png)
-
-3.Менять настройки графики.
-![g](https://user-images.githubusercontent.com/94743111/206456304-8a162e27-eef2-4f4c-8390-1b4857754990.png)
-
-
-
-## Задание 3
-### Не сделал
+### Не сделал.
 <img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="40" height="40" />
 
 
+## Задание 3
+### Предложить наиболее подходящий на ваш взгляд способ монетизации игры D.Picker. Дать развернутый ответ с комментариями.
+Цель в игре - набрать как можно больше очков, исходя из этого можно сделать платные модификаторы превращающие каждое пойманное яйцо в 2,3,5 и т.д. очков.
+Также можно добавить одноразовые предметы с различными эффектами: замедление времени, увеличенные модельки щита или яиц, режим бессмертия.
+Внутриигровые покупки сделать преимущественно за игровую валюту, чтобы пользователь более лояльно реагировал на цену. Количество покупаемой игровой валюты сделать 
+немного больше чем стоимость предметов, чтобы после покупки предмета игрок склонялся к докупке валюты, видя в этом выгоду.
 ## Выводы
 
-Я познакомился с плагином YG и изучил некоторые взаимодествия Unity и Яндекс консолью разработчика.
+Я познакомился с плагином YG и изучил способы мнетизации игры.
 
 ## Powered by
 
